@@ -1,0 +1,63 @@
+name: DevSecOps Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  devsecops-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Secret Scanning
+      - name: Git Secret Scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Maven build
+      - name: Maven Build
+        run: mvn clean package -Dmaven.test.skip=true
+
+      # SonarCloud scanning
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v3.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=amarnathsaha
+            -Dsonar.projectKey=amarnathsaha_spring-boot-hello-world
+            -Dsonar.verbose=true
+            -Dsonar.sources=src/main/java/
+            -Dsonar.language=java
+            -Dsonar.java.binaries=./target/classes
+      # sast scan
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/maven@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # OWASP Dependency check
+   #   - name: OWASP Dependency check
+   #     uses: dependency-check/Dependency-Check_Action@main
+   #     id: Depcheck
+   #     with:
+   #       project: 'test'
+    #      path: '.'
+     #     format: 'HTML'
+      ##   args: >
+        #    --failOnCVSS 7
+         #   --enableRetired
+          #  --log --log-level DEBUG
+           # --exclude **/aspectjweaver-1.8.13.jar
+      # Upload Test results
+     # - name: Upload Test results
+      #  uses: actions/upload-artifact@v4
+       # with:
+        #  name: Depcheck report
+         # path: ${{ github.workspace }}/reports
