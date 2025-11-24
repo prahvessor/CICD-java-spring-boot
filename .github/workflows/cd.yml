@@ -27,4 +27,4 @@ jobs:
         with:
           app-name: "spring-boot-app"
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          package: "./target/*.jar"
+          package: "spring-boot-app.zip"
