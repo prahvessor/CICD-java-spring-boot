@@ -1,10 +1,15 @@
 name: CD to Azure Web App
 
 on:
+  workflow_run:
+    workflows: ["CI Build"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
