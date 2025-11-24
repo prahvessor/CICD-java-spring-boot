@@ -26,7 +26,7 @@ jobs:
           java-version: '8'
 
       - name: Build with Maven
-        run: mvn clean package --file pom.xml
+        run: mvn -B package --file pom.xml
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -50,4 +50,4 @@ jobs:
         with:
           app-name: "spring-boot-app"
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          package: "target/spring-boot-app.zip"
+          package: "target/*.jar"
