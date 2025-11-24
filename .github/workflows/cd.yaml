@@ -1,0 +1,30 @@
+name: CD - Deploy Spring Boot to Azure Web App
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact from CI
+        uses: actions/download-artifact@v4
+        with:
+          name: spring-boot-app
+          path: ./target
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "spring-boot-app"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_CREDENTIALS }}
+          package: "./target/*.jar"
