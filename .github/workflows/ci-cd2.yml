@@ -1,4 +1,4 @@
-name: Deploy Java project to Azure Function App
+name: Build and Deploy Spring Boot to Azure Function App
 
 on:
   push:
