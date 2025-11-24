@@ -1,4 +1,4 @@
-name: CD - Deploy Spring Boot to Azure Web App
+name: CD to Azure Web App
 
 on:
   workflow_dispatch:
