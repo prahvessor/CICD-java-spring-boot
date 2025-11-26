@@ -51,3 +51,37 @@ jobs:
           app-name: "spring-boot-app"
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
           package: "target/*.jar"
+
+  notify-success:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Send success email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          subject: "🚀 CI/CD Success: Spring Boot deployed!"
+          to: "emin.aliev@gmail.com"
+          from: "GitHub Actions <${{ secrets.SMTP_USER }}>"
+          body: "Deployment completed successfully."
+
+  notify-failure:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send failure email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          subject: "❌ CI/CD FAILED: Spring Boot deployment error"
+          to: "emin.aliev@gmail.com"
+          from: "GitHub Actions <${{ secrets.SMTP_USER }}>"
+          body: "Deployment failed. Check GitHub Actions logs."
