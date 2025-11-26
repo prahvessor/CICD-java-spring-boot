@@ -50,7 +50,7 @@ jobs:
         with:
           app-name: "spring-boot-app"
           #publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Deploy with Publish Profile
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS }} # Deploy with Service Principal Credentials
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Deploy with Service Principal Credentials
           package: "target/*.jar"
 
   notify-success:
