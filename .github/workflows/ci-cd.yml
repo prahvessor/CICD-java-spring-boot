@@ -49,7 +49,8 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: "spring-boot-app"
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          #publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Deploy with Publish Profile
+          publish-profile: ${{ secrets.AZURE_CREDENTIALS }} # Deploy with Service Principal Credentials
           package: "target/*.jar"
 
   notify-success:
